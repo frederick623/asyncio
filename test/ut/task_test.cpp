@@ -400,13 +400,13 @@ SCENARIO("test timeout") {
 
 SCENARIO("echo server & client") {
     bool is_called = false;
-    constexpr std::string_view message = "hello world!";
+    std::string message = "hello world!";
 
     asyncio::run([&]() -> Task<> {
         auto handle_echo = [&](Stream stream) -> Task<> {
             auto& sockinfo = stream.get_sock_info();
             auto data = co_await stream.read(100);
-            REQUIRE(std::string_view{data.data()} == message);
+            REQUIRE(std::string{data.data()} == message);
             co_await stream.write(data);
         };
 

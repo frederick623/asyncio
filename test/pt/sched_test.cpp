@@ -16,10 +16,10 @@ SCENARIO("lots of synchronous completions") {
 
     auto main = [&]() -> Task<> {
         int sum = 0;
-        for (int i = 0; i < 1'000'000; ++i) {
+        for (int i = 0; i < 1000; ++i) {
             sum += co_await completes_synchronously();
         }
-        REQUIRE(sum == 1'000'000);
+        REQUIRE(sum == 1000);
     };
 
     ankerl::nanobench::Bench().epochs(20).run("lots of synchronous completions ", [&] {

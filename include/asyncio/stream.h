@@ -5,6 +5,7 @@
 #ifndef ASYNCIO_STREAM_H
 #define ASYNCIO_STREAM_H
 #include <asyncio/asyncio_ns.h>
+#include <asyncio/buffer.h>
 #include <asyncio/event_loop.h>
 #include <asyncio/selector/event.h>
 #include <asyncio/noncopyable.h>
@@ -52,9 +53,8 @@ namespace socket {
         }
     }
 }
-
+ 
 struct Stream: NonCopyable {
-    using Buffer = std::vector<char>;
     Stream(int fd): read_fd_(fd), write_fd_(dup(fd)) {
         if (read_fd_ >= 0) {
             socklen_t addrlen = sizeof(sock_info_);
@@ -85,7 +85,7 @@ struct Stream: NonCopyable {
 
         Buffer result(sz, 0);
         co_await read_awaiter_;
-        sz = ::read(read_fd_, result.data(), result.size());
+        sz = ::read(read_fd_, result.buffer_.data(), result.size());
         if (sz == -1) {
             throw std::system_error(std::make_error_code(static_cast<std::errc>(errno)));
         }
@@ -99,7 +99,7 @@ struct Stream: NonCopyable {
         while (total_write < buf.size()) {
             // FIXME: how to handle write event?
             // co_await write_awaiter_;
-            ssize_t sz = ::write(write_fd_, buf.data() + total_write, buf.size() - total_write);
+            ssize_t sz = ::write(write_fd_, buf.buffer_.data() + total_write, buf.size() - total_write);
             if (sz == -1) {
                 throw std::system_error(std::make_error_code(static_cast<std::errc>(errno)));
             }
@@ -120,7 +120,7 @@ private:
         int total_read = 0;
         do {
             co_await read_awaiter_;
-            current_read = ::read(read_fd_, result.data() + total_read, chunk_size);
+            current_read = ::read(read_fd_, result.buffer_.data() + total_read, chunk_size);
             if (current_read == -1) {
                 throw std::system_error(std::make_error_code(static_cast<std::errc>(errno)));
             }

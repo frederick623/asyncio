@@ -25,6 +25,7 @@ Task<std::string> hello_world() {
 }
 
 int main() {
+    // static_assert(std::is_move_constructible_v<ScheduledTask(ScheduledTask<Task<>>)>);
     fmt::print("run result: {}\n", asyncio::run(hello_world()));
     return 0;
 }

@@ -40,7 +40,7 @@ struct Server: NonCopyable {
             co_await ev_awaiter;
             int clientfd = ::accept(fd_, reinterpret_cast<sockaddr*>(&remoteaddr), &addrlen);
             if (clientfd == -1) { continue; }
-            connected.emplace_back(schedule_task(connect_cb_(Stream{clientfd, remoteaddr})));
+            connected.emplace_back(connect_cb_(Stream{clientfd, remoteaddr}));
             // garbage collect
             clean_up_connected(connected);
         }

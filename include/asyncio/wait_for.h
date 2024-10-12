@@ -4,6 +4,7 @@
 
 #ifndef ASYNCIO_WAIT_FOR_H
 #define ASYNCIO_WAIT_FOR_H
+#include "asyncio/task.h"
 #include <asyncio/asyncio_ns.h>
 #include <asyncio/concept/future.h>
 #include <asyncio/concept/awaitable.h>

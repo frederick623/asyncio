@@ -17,7 +17,7 @@
 
 ASYNCIO_NS_BEGIN
 namespace detail {
-Task<bool> connect(int fd, const sockaddr *addr, socklen_t len) noexcept {
+Task<bool> connect(int fd, const sockaddr *addr, socklen_t len) {
     int rc = ::connect(fd, addr, len);
     if (rc == 0) { co_return true; }
     if (rc < 0 && errno != EINPROGRESS) {
@@ -38,7 +38,7 @@ Task<bool> connect(int fd, const sockaddr *addr, socklen_t len) noexcept {
 
 }
 
-Task<Stream> open_connection(std::string_view ip, uint16_t port) {
+inline Task<Stream> open_connection(std::string_view ip, uint16_t port) {
     addrinfo hints { .ai_family = AF_UNSPEC, .ai_socktype = SOCK_STREAM };
     addrinfo *server_info {nullptr};
     auto service = std::to_string(port);

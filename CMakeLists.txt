@@ -14,6 +14,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(ASYNCIO_INC
         include/asyncio/asyncio_ns.h
+        include/asyncio/buffer.h
         include/asyncio/task.h
         include/asyncio/event_loop.h
         include/asyncio/runner.h
@@ -51,15 +52,16 @@ else()
 endif(BUILD_SHARED_LIBS)
 
 
-if (BUILD_TESTING)
+#if (BUILD_TESTING)
+add_subdirectory(third_party/fmt)
     add_subdirectory(third_party/Catch2)
     add_subdirectory(third_party/nanobench)
     add_subdirectory(test)
-endif()
+#endif()
 
 include(GNUInstallDirs)
 
-find_package(fmt REQUIRED)
+#find_package(fmt REQUIRED)
 
 set_target_properties(${PROJECT_NAME}
 PROPERTIES
@@ -75,7 +77,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
 
-target_link_libraries(asyncio PUBLIC fmt::fmt)
+#target_link_libraries(asyncio PUBLIC fmt::fmt)
 
 install(
     DIRECTORY ${CMAKE_SOURCE_DIR}/include/asyncio

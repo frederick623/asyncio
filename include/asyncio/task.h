@@ -4,6 +4,7 @@
 
 #ifndef ASYNCIO_TASK_H
 #define ASYNCIO_TASK_H
+#include <asyncio/schedule_task.h>
 #include <asyncio/handle.h>
 #include <asyncio/event_loop.h>
 #include <asyncio/result.h>
@@ -129,7 +130,7 @@ struct Task: private NonCopyable {
 
     bool valid() const { return handle_ != nullptr; }
     bool done() const { return handle_.done(); }
-private:
+
     void destroy() {
         if (auto handle = std::exchange(handle_, nullptr)) {
             handle.promise().cancel();
